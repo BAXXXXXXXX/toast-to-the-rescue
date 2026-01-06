@@ -1,0 +1,254 @@
+<html>
+<head>
+<title>main.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #6aab73;}
+.s5 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">pygame</span>
+<span class="s0">import </span><span class="s1">sys</span>
+<span class="s0">import </span><span class="s1">random</span>
+<span class="s0">import </span><span class="s1">math</span>
+
+<span class="s1">pygame</span><span class="s2">.</span><span class="s1">init</span><span class="s2">()</span>
+<span class="s1">pygame</span><span class="s2">.</span><span class="s1">mixer</span><span class="s2">.</span><span class="s1">init</span><span class="s2">()</span>
+
+<span class="s1">WIDTH</span><span class="s2">, </span><span class="s1">HEIGHT </span><span class="s2">= </span><span class="s3">900</span><span class="s2">, </span><span class="s3">500</span>
+<span class="s1">screen </span><span class="s2">= </span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">display</span><span class="s2">.</span><span class="s1">set_mode</span><span class="s2">((</span><span class="s1">WIDTH</span><span class="s2">, </span><span class="s1">HEIGHT</span><span class="s2">))</span>
+<span class="s1">pygame</span><span class="s2">.</span><span class="s1">display</span><span class="s2">.</span><span class="s1">set_caption</span><span class="s2">(</span><span class="s4">&quot;Toast to the Rescue!&quot;</span><span class="s2">)</span>
+
+<span class="s1">clock </span><span class="s2">= </span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">time</span><span class="s2">.</span><span class="s1">Clock</span><span class="s2">()</span>
+
+<span class="s5"># ---------- COLORS ----------</span>
+<span class="s1">SKY_DAY_TOP </span><span class="s2">= (</span><span class="s3">135</span><span class="s2">, </span><span class="s3">206</span><span class="s2">, </span><span class="s3">250</span><span class="s2">)</span>
+<span class="s1">SKY_DAY_BOTTOM </span><span class="s2">= (</span><span class="s3">180</span><span class="s2">, </span><span class="s3">225</span><span class="s2">, </span><span class="s3">250</span><span class="s2">)</span>
+<span class="s1">ROAD_COLOR </span><span class="s2">= (</span><span class="s3">50</span><span class="s2">, </span><span class="s3">50</span><span class="s2">, </span><span class="s3">50</span><span class="s2">)</span>
+<span class="s1">BROWN </span><span class="s2">= (</span><span class="s3">210</span><span class="s2">, </span><span class="s3">140</span><span class="s2">, </span><span class="s3">60</span><span class="s2">)</span>
+<span class="s1">RED </span><span class="s2">= (</span><span class="s3">220</span><span class="s2">, </span><span class="s3">50</span><span class="s2">, </span><span class="s3">50</span><span class="s2">)</span>
+<span class="s1">GRAY </span><span class="s2">= (</span><span class="s3">130</span><span class="s2">, </span><span class="s3">130</span><span class="s2">, </span><span class="s3">130</span><span class="s2">)</span>
+<span class="s1">YELLOW </span><span class="s2">= (</span><span class="s3">255</span><span class="s2">, </span><span class="s3">230</span><span class="s2">, </span><span class="s3">0</span><span class="s2">)</span>
+<span class="s1">BLACK </span><span class="s2">= (</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">)</span>
+<span class="s1">WHITE </span><span class="s2">= (</span><span class="s3">255</span><span class="s2">, </span><span class="s3">255</span><span class="s2">, </span><span class="s3">255</span><span class="s2">)</span>
+<span class="s1">GREEN </span><span class="s2">= (</span><span class="s3">50</span><span class="s2">, </span><span class="s3">200</span><span class="s2">, </span><span class="s3">50</span><span class="s2">)</span>
+<span class="s1">BLUE </span><span class="s2">= (</span><span class="s3">50</span><span class="s2">, </span><span class="s3">50</span><span class="s2">, </span><span class="s3">200</span><span class="s2">)</span>
+<span class="s1">CAR_COLORS </span><span class="s2">= [</span><span class="s1">RED</span><span class="s2">, </span><span class="s1">GREEN</span><span class="s2">, </span><span class="s1">BLUE</span><span class="s2">, (</span><span class="s3">255</span><span class="s2">,</span><span class="s3">140</span><span class="s2">,</span><span class="s3">0</span><span class="s2">), (</span><span class="s3">255</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">255</span><span class="s2">)]</span>
+
+<span class="s1">font </span><span class="s2">= </span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">font</span><span class="s2">.</span><span class="s1">SysFont</span><span class="s2">(</span><span class="s0">None</span><span class="s2">, </span><span class="s3">32</span><span class="s2">)</span>
+<span class="s1">big_font </span><span class="s2">= </span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">font</span><span class="s2">.</span><span class="s1">SysFont</span><span class="s2">(</span><span class="s0">None</span><span class="s2">, </span><span class="s3">72</span><span class="s2">)</span>
+
+<span class="s5"># ---------- SOUND ----------</span>
+<span class="s0">def </span><span class="s1">beep</span><span class="s2">(</span><span class="s1">freq</span><span class="s2">, </span><span class="s1">dur</span><span class="s2">=</span><span class="s3">150</span><span class="s2">):</span>
+    <span class="s1">sr </span><span class="s2">= </span><span class="s3">44100</span>
+    <span class="s1">n </span><span class="s2">= </span><span class="s1">int</span><span class="s2">(</span><span class="s1">sr </span><span class="s2">* </span><span class="s1">dur </span><span class="s2">/ </span><span class="s3">1000</span><span class="s2">)</span>
+    <span class="s1">buf </span><span class="s2">= </span><span class="s1">bytearray</span><span class="s2">()</span>
+    <span class="s0">for </span><span class="s1">i </span><span class="s0">in </span><span class="s1">range</span><span class="s2">(</span><span class="s1">n</span><span class="s2">):</span>
+        <span class="s1">t </span><span class="s2">= </span><span class="s1">i </span><span class="s2">/ </span><span class="s1">sr</span>
+        <span class="s1">buf</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">int</span><span class="s2">(</span><span class="s3">127 </span><span class="s2">* </span><span class="s1">math</span><span class="s2">.</span><span class="s1">sin</span><span class="s2">(</span><span class="s3">2 </span><span class="s2">* </span><span class="s1">math</span><span class="s2">.</span><span class="s1">pi </span><span class="s2">* </span><span class="s1">freq </span><span class="s2">* </span><span class="s1">t</span><span class="s2">)) + </span><span class="s3">128</span><span class="s2">)</span>
+    <span class="s0">return </span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">mixer</span><span class="s2">.</span><span class="s1">Sound</span><span class="s2">(</span><span class="s1">buffer</span><span class="s2">=</span><span class="s1">bytes</span><span class="s2">(</span><span class="s1">buf</span><span class="s2">))</span>
+
+<span class="s1">s_save </span><span class="s2">= </span><span class="s1">beep</span><span class="s2">(</span><span class="s3">880</span><span class="s2">)</span>
+<span class="s1">s_hit </span><span class="s2">= </span><span class="s1">beep</span><span class="s2">(</span><span class="s3">220</span><span class="s2">)</span>
+<span class="s1">s_gameover </span><span class="s2">= </span><span class="s1">beep</span><span class="s2">(</span><span class="s3">110</span><span class="s2">, </span><span class="s3">300</span><span class="s2">)</span>
+
+<span class="s5"># Music</span>
+<span class="s1">music_notes </span><span class="s2">= [</span>
+    <span class="s1">beep</span><span class="s2">(</span><span class="s3">330</span><span class="s2">, </span><span class="s3">200</span><span class="s2">), </span><span class="s1">beep</span><span class="s2">(</span><span class="s3">440</span><span class="s2">, </span><span class="s3">200</span><span class="s2">), </span><span class="s1">beep</span><span class="s2">(</span><span class="s3">550</span><span class="s2">, </span><span class="s3">150</span><span class="s2">), </span><span class="s1">beep</span><span class="s2">(</span><span class="s3">660</span><span class="s2">, </span><span class="s3">250</span><span class="s2">),</span>
+    <span class="s1">beep</span><span class="s2">(</span><span class="s3">550</span><span class="s2">, </span><span class="s3">150</span><span class="s2">), </span><span class="s1">beep</span><span class="s2">(</span><span class="s3">440</span><span class="s2">, </span><span class="s3">200</span><span class="s2">), </span><span class="s1">beep</span><span class="s2">(</span><span class="s3">330</span><span class="s2">, </span><span class="s3">200</span><span class="s2">), </span><span class="s1">beep</span><span class="s2">(</span><span class="s3">440</span><span class="s2">, </span><span class="s3">200</span><span class="s2">)</span>
+<span class="s2">]</span>
+<span class="s1">music_index </span><span class="s2">= </span><span class="s3">0</span>
+<span class="s1">music_channel </span><span class="s2">= </span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">mixer</span><span class="s2">.</span><span class="s1">Channel</span><span class="s2">(</span><span class="s3">0</span><span class="s2">)</span>
+<span class="s1">music_timer </span><span class="s2">= </span><span class="s3">0</span>
+<span class="s1">MUSIC_INTERVAL </span><span class="s2">= </span><span class="s3">15</span>
+
+<span class="s5"># ---------- PLAYER ----------</span>
+<span class="s1">player </span><span class="s2">= </span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">Rect</span><span class="s2">(</span><span class="s3">100</span><span class="s2">, </span><span class="s3">360</span><span class="s2">, </span><span class="s3">40</span><span class="s2">, </span><span class="s3">40</span><span class="s2">)</span>
+<span class="s1">vel_y </span><span class="s2">= </span><span class="s3">0</span>
+<span class="s1">gravity </span><span class="s2">= </span><span class="s3">0.9</span>
+<span class="s1">jump </span><span class="s2">= -</span><span class="s3">16</span>
+<span class="s1">on_ground </span><span class="s2">= </span><span class="s0">False</span>
+<span class="s1">invincible </span><span class="s2">= </span><span class="s3">0</span>
+
+<span class="s5"># ---------- CARS ----------</span>
+<span class="s1">cars </span><span class="s2">= []</span>
+
+<span class="s5"># ---------- XYLOPHONES ----------</span>
+<span class="s1">xylophones </span><span class="s2">= []</span>
+<span class="s1">XYL_WIDTH</span><span class="s2">, </span><span class="s1">XYL_HEIGHT </span><span class="s2">= </span><span class="s3">30</span><span class="s2">, </span><span class="s3">20</span>
+<span class="s1">XYL_TIME </span><span class="s2">= </span><span class="s3">300</span>
+
+<span class="s5"># ---------- RECORD ----------</span>
+<span class="s1">record </span><span class="s2">= </span><span class="s3">0  </span><span class="s5"># punteggio più alto della sessione</span>
+
+<span class="s5"># ---------- GAME STATE ----------</span>
+<span class="s0">def </span><span class="s1">reset</span><span class="s2">():</span>
+    <span class="s0">global </span><span class="s1">score</span><span class="s2">, </span><span class="s1">lives</span><span class="s2">, </span><span class="s1">game_over</span><span class="s2">, </span><span class="s1">cars</span><span class="s2">, </span><span class="s1">car_speed</span><span class="s2">, </span><span class="s1">invincible</span><span class="s2">, </span><span class="s1">xylophones</span>
+    <span class="s1">score </span><span class="s2">= </span><span class="s3">0</span>
+    <span class="s1">lives </span><span class="s2">= </span><span class="s3">3</span>
+    <span class="s1">game_over </span><span class="s2">= </span><span class="s0">False</span>
+    <span class="s1">car_speed </span><span class="s2">= </span><span class="s3">3</span>
+    <span class="s1">invincible </span><span class="s2">= </span><span class="s3">0</span>
+    <span class="s1">cars</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">()</span>
+    <span class="s1">cars</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">spawn_car</span><span class="s2">())</span>
+    <span class="s1">xylophones</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">()</span>
+    <span class="s1">spawn_xylophone</span><span class="s2">()</span>
+
+<span class="s0">def </span><span class="s1">spawn_car</span><span class="s2">():</span>
+    <span class="s1">lane_x </span><span class="s2">= </span><span class="s1">random</span><span class="s2">.</span><span class="s1">randint</span><span class="s2">(</span><span class="s3">50</span><span class="s2">, </span><span class="s1">WIDTH</span><span class="s2">-</span><span class="s3">80</span><span class="s2">)</span>
+    <span class="s1">color </span><span class="s2">= </span><span class="s1">random</span><span class="s2">.</span><span class="s1">choice</span><span class="s2">(</span><span class="s1">CAR_COLORS</span><span class="s2">)</span>
+    <span class="s0">return </span><span class="s2">{</span><span class="s4">&quot;rect&quot;</span><span class="s2">: </span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">Rect</span><span class="s2">(</span><span class="s1">lane_x</span><span class="s2">, -</span><span class="s3">60</span><span class="s2">, </span><span class="s3">60</span><span class="s2">, </span><span class="s3">30</span><span class="s2">), </span><span class="s4">&quot;color&quot;</span><span class="s2">: </span><span class="s1">color</span><span class="s2">}</span>
+
+<span class="s0">def </span><span class="s1">spawn_xylophone</span><span class="s2">():</span>
+    <span class="s1">lane_y </span><span class="s2">= </span><span class="s3">420 </span><span class="s2">- </span><span class="s3">40</span>
+    <span class="s1">x </span><span class="s2">= </span><span class="s1">random</span><span class="s2">.</span><span class="s1">randint</span><span class="s2">(</span><span class="s3">100</span><span class="s2">, </span><span class="s1">WIDTH </span><span class="s2">- </span><span class="s3">50</span><span class="s2">)</span>
+    <span class="s1">xylophones</span><span class="s2">.</span><span class="s1">append</span><span class="s2">({</span><span class="s4">&quot;rect&quot;</span><span class="s2">: </span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">Rect</span><span class="s2">(</span><span class="s1">x</span><span class="s2">, </span><span class="s1">lane_y</span><span class="s2">, </span><span class="s1">XYL_WIDTH</span><span class="s2">, </span><span class="s1">XYL_HEIGHT</span><span class="s2">), </span><span class="s4">&quot;timer&quot;</span><span class="s2">: </span><span class="s1">XYL_TIME</span><span class="s2">})</span>
+
+<span class="s1">reset</span><span class="s2">()</span>
+<span class="s1">state </span><span class="s2">= </span><span class="s4">&quot;menu&quot;</span>
+
+<span class="s5"># ---------- MAIN LOOP ----------</span>
+<span class="s0">while True</span><span class="s2">:</span>
+    <span class="s5"># Sfondo sfumato verticale</span>
+    <span class="s0">for </span><span class="s1">y </span><span class="s0">in </span><span class="s1">range</span><span class="s2">(</span><span class="s1">HEIGHT</span><span class="s2">):</span>
+        <span class="s1">ratio </span><span class="s2">= </span><span class="s1">y </span><span class="s2">/ </span><span class="s1">HEIGHT</span>
+        <span class="s1">r </span><span class="s2">= </span><span class="s1">int</span><span class="s2">(</span><span class="s1">SKY_DAY_TOP</span><span class="s2">[</span><span class="s3">0</span><span class="s2">]*(</span><span class="s3">1</span><span class="s2">-</span><span class="s1">ratio</span><span class="s2">) + </span><span class="s1">SKY_DAY_BOTTOM</span><span class="s2">[</span><span class="s3">0</span><span class="s2">]*</span><span class="s1">ratio</span><span class="s2">)</span>
+        <span class="s1">g </span><span class="s2">= </span><span class="s1">int</span><span class="s2">(</span><span class="s1">SKY_DAY_TOP</span><span class="s2">[</span><span class="s3">1</span><span class="s2">]*(</span><span class="s3">1</span><span class="s2">-</span><span class="s1">ratio</span><span class="s2">) + </span><span class="s1">SKY_DAY_BOTTOM</span><span class="s2">[</span><span class="s3">1</span><span class="s2">]*</span><span class="s1">ratio</span><span class="s2">)</span>
+        <span class="s1">b </span><span class="s2">= </span><span class="s1">int</span><span class="s2">(</span><span class="s1">SKY_DAY_TOP</span><span class="s2">[</span><span class="s3">2</span><span class="s2">]*(</span><span class="s3">1</span><span class="s2">-</span><span class="s1">ratio</span><span class="s2">) + </span><span class="s1">SKY_DAY_BOTTOM</span><span class="s2">[</span><span class="s3">2</span><span class="s2">]*</span><span class="s1">ratio</span><span class="s2">)</span>
+        <span class="s1">pygame</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">.</span><span class="s1">line</span><span class="s2">(</span><span class="s1">screen</span><span class="s2">, (</span><span class="s1">r</span><span class="s2">,</span><span class="s1">g</span><span class="s2">,</span><span class="s1">b</span><span class="s2">), (</span><span class="s3">0</span><span class="s2">,</span><span class="s1">y</span><span class="s2">), (</span><span class="s1">WIDTH</span><span class="s2">,</span><span class="s1">y</span><span class="s2">))</span>
+
+    <span class="s0">for </span><span class="s1">event </span><span class="s0">in </span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">event</span><span class="s2">.</span><span class="s1">get</span><span class="s2">():</span>
+        <span class="s0">if </span><span class="s1">event</span><span class="s2">.</span><span class="s1">type </span><span class="s2">== </span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">QUIT</span><span class="s2">:</span>
+            <span class="s1">pygame</span><span class="s2">.</span><span class="s1">quit</span><span class="s2">()</span>
+            <span class="s1">sys</span><span class="s2">.</span><span class="s1">exit</span><span class="s2">()</span>
+
+    <span class="s1">keys </span><span class="s2">= </span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">key</span><span class="s2">.</span><span class="s1">get_pressed</span><span class="s2">()</span>
+
+    <span class="s5"># ---------- MENU ----------</span>
+    <span class="s0">if </span><span class="s1">state </span><span class="s2">== </span><span class="s4">&quot;menu&quot;</span><span class="s2">:</span>
+        <span class="s1">screen</span><span class="s2">.</span><span class="s1">blit</span><span class="s2">(</span><span class="s1">big_font</span><span class="s2">.</span><span class="s1">render</span><span class="s2">(</span><span class="s4">&quot;TOAST TO THE RESCUE!&quot;</span><span class="s2">, </span><span class="s0">True</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">), (</span><span class="s3">150</span><span class="s2">, </span><span class="s3">150</span><span class="s2">))</span>
+        <span class="s1">screen</span><span class="s2">.</span><span class="s1">blit</span><span class="s2">(</span><span class="s1">font</span><span class="s2">.</span><span class="s1">render</span><span class="s2">(</span><span class="s4">&quot;Premi SPAZIO per iniziare&quot;</span><span class="s2">, </span><span class="s0">True</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">), (</span><span class="s3">300</span><span class="s2">, </span><span class="s3">240</span><span class="s2">))</span>
+        <span class="s1">screen</span><span class="s2">.</span><span class="s1">blit</span><span class="s2">(</span><span class="s1">font</span><span class="s2">.</span><span class="s1">render</span><span class="s2">(</span><span class="s4">f&quot;Record sessione: </span><span class="s0">{</span><span class="s1">record</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">, </span><span class="s0">True</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">), (</span><span class="s3">330</span><span class="s2">, </span><span class="s3">280</span><span class="s2">))</span>
+        <span class="s0">if </span><span class="s1">keys</span><span class="s2">[</span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">K_SPACE</span><span class="s2">]:</span>
+            <span class="s1">state </span><span class="s2">= </span><span class="s4">&quot;game&quot;</span>
+        <span class="s1">pygame</span><span class="s2">.</span><span class="s1">display</span><span class="s2">.</span><span class="s1">update</span><span class="s2">()</span>
+        <span class="s1">clock</span><span class="s2">.</span><span class="s1">tick</span><span class="s2">(</span><span class="s3">60</span><span class="s2">)</span>
+        <span class="s0">continue</span>
+
+    <span class="s5"># ---------- GAME OVER ----------</span>
+    <span class="s0">if </span><span class="s4">'game_over' </span><span class="s0">in </span><span class="s1">locals</span><span class="s2">() </span><span class="s0">and </span><span class="s1">game_over</span><span class="s2">:</span>
+        <span class="s1">screen</span><span class="s2">.</span><span class="s1">blit</span><span class="s2">(</span><span class="s1">big_font</span><span class="s2">.</span><span class="s1">render</span><span class="s2">(</span><span class="s4">&quot;GAME OVER&quot;</span><span class="s2">, </span><span class="s0">True</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">), (</span><span class="s3">300</span><span class="s2">, </span><span class="s3">180</span><span class="s2">))</span>
+        <span class="s1">screen</span><span class="s2">.</span><span class="s1">blit</span><span class="s2">(</span><span class="s1">font</span><span class="s2">.</span><span class="s1">render</span><span class="s2">(</span><span class="s4">f&quot;Punteggio: </span><span class="s0">{</span><span class="s1">score</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">, </span><span class="s0">True</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">), (</span><span class="s3">350</span><span class="s2">, </span><span class="s3">260</span><span class="s2">))</span>
+        <span class="s1">screen</span><span class="s2">.</span><span class="s1">blit</span><span class="s2">(</span><span class="s1">font</span><span class="s2">.</span><span class="s1">render</span><span class="s2">(</span><span class="s4">&quot;Premi R per ricominciare&quot;</span><span class="s2">, </span><span class="s0">True</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">), (</span><span class="s3">300</span><span class="s2">, </span><span class="s3">300</span><span class="s2">))</span>
+        <span class="s1">screen</span><span class="s2">.</span><span class="s1">blit</span><span class="s2">(</span><span class="s1">font</span><span class="s2">.</span><span class="s1">render</span><span class="s2">(</span><span class="s4">f&quot;Record sessione: </span><span class="s0">{</span><span class="s1">record</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">, </span><span class="s0">True</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">), (</span><span class="s3">330</span><span class="s2">, </span><span class="s3">340</span><span class="s2">))</span>
+        <span class="s0">if </span><span class="s1">keys</span><span class="s2">[</span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">K_r</span><span class="s2">]:</span>
+            <span class="s1">reset</span><span class="s2">()</span>
+        <span class="s1">pygame</span><span class="s2">.</span><span class="s1">display</span><span class="s2">.</span><span class="s1">update</span><span class="s2">()</span>
+        <span class="s1">clock</span><span class="s2">.</span><span class="s1">tick</span><span class="s2">(</span><span class="s3">60</span><span class="s2">)</span>
+        <span class="s0">continue</span>
+
+    <span class="s5"># ---------- PLAYER ----------</span>
+    <span class="s0">if </span><span class="s1">keys</span><span class="s2">[</span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">K_LEFT</span><span class="s2">]:</span>
+        <span class="s1">player</span><span class="s2">.</span><span class="s1">x </span><span class="s2">-= </span><span class="s3">5</span>
+    <span class="s0">if </span><span class="s1">keys</span><span class="s2">[</span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">K_RIGHT</span><span class="s2">]:</span>
+        <span class="s1">player</span><span class="s2">.</span><span class="s1">x </span><span class="s2">+= </span><span class="s3">5</span>
+    <span class="s0">if </span><span class="s1">keys</span><span class="s2">[</span><span class="s1">pygame</span><span class="s2">.</span><span class="s1">K_SPACE</span><span class="s2">] </span><span class="s0">and </span><span class="s1">on_ground</span><span class="s2">:</span>
+        <span class="s1">vel_y </span><span class="s2">= </span><span class="s1">jump</span>
+        <span class="s1">on_ground </span><span class="s2">= </span><span class="s0">False</span>
+
+    <span class="s1">vel_y </span><span class="s2">+= </span><span class="s1">gravity</span>
+    <span class="s1">player</span><span class="s2">.</span><span class="s1">y </span><span class="s2">+= </span><span class="s1">vel_y</span>
+    <span class="s0">if </span><span class="s1">player</span><span class="s2">.</span><span class="s1">bottom </span><span class="s2">&gt;= </span><span class="s3">420</span><span class="s2">:</span>
+        <span class="s1">player</span><span class="s2">.</span><span class="s1">bottom </span><span class="s2">= </span><span class="s3">420</span>
+        <span class="s1">vel_y </span><span class="s2">= </span><span class="s3">0</span>
+        <span class="s1">on_ground </span><span class="s2">= </span><span class="s0">True</span>
+
+    <span class="s5"># ---------- CARS ----------</span>
+    <span class="s0">for </span><span class="s1">car </span><span class="s0">in </span><span class="s1">cars</span><span class="s2">:</span>
+        <span class="s1">car</span><span class="s2">[</span><span class="s4">&quot;rect&quot;</span><span class="s2">].</span><span class="s1">y </span><span class="s2">+= </span><span class="s1">car_speed</span>
+        <span class="s0">if </span><span class="s1">car</span><span class="s2">[</span><span class="s4">&quot;rect&quot;</span><span class="s2">].</span><span class="s1">y </span><span class="s2">&gt; </span><span class="s1">HEIGHT</span><span class="s2">:</span>
+            <span class="s1">car</span><span class="s2">[</span><span class="s4">&quot;rect&quot;</span><span class="s2">].</span><span class="s1">y </span><span class="s2">= -</span><span class="s3">60</span>
+            <span class="s1">car</span><span class="s2">[</span><span class="s4">&quot;rect&quot;</span><span class="s2">].</span><span class="s1">x </span><span class="s2">= </span><span class="s1">random</span><span class="s2">.</span><span class="s1">randint</span><span class="s2">(</span><span class="s3">50</span><span class="s2">, </span><span class="s1">WIDTH</span><span class="s2">-</span><span class="s3">80</span><span class="s2">)</span>
+            <span class="s1">car</span><span class="s2">[</span><span class="s4">&quot;color&quot;</span><span class="s2">] = </span><span class="s1">random</span><span class="s2">.</span><span class="s1">choice</span><span class="s2">(</span><span class="s1">CAR_COLORS</span><span class="s2">)</span>
+        <span class="s0">if </span><span class="s1">car</span><span class="s2">[</span><span class="s4">&quot;rect&quot;</span><span class="s2">].</span><span class="s1">colliderect</span><span class="s2">(</span><span class="s1">player</span><span class="s2">) </span><span class="s0">and </span><span class="s1">invincible </span><span class="s2">== </span><span class="s3">0</span><span class="s2">:</span>
+            <span class="s1">lives </span><span class="s2">-= </span><span class="s3">1</span>
+            <span class="s1">s_hit</span><span class="s2">.</span><span class="s1">play</span><span class="s2">()</span>
+            <span class="s1">invincible </span><span class="s2">= </span><span class="s3">60</span>
+
+    <span class="s5"># ---------- XYLOPHONES ----------</span>
+    <span class="s0">for </span><span class="s1">xylo </span><span class="s0">in </span><span class="s1">xylophones</span><span class="s2">[:]:</span>
+        <span class="s1">xylo</span><span class="s2">[</span><span class="s4">&quot;timer&quot;</span><span class="s2">] -= </span><span class="s3">1</span>
+        <span class="s1">pygame</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">(</span><span class="s1">screen</span><span class="s2">, </span><span class="s1">YELLOW</span><span class="s2">, </span><span class="s1">xylo</span><span class="s2">[</span><span class="s4">&quot;rect&quot;</span><span class="s2">])</span>
+        <span class="s0">if </span><span class="s1">xylo</span><span class="s2">[</span><span class="s4">&quot;rect&quot;</span><span class="s2">].</span><span class="s1">colliderect</span><span class="s2">(</span><span class="s1">player</span><span class="s2">):</span>
+            <span class="s1">score </span><span class="s2">+= </span><span class="s3">1</span>
+            <span class="s1">s_save</span><span class="s2">.</span><span class="s1">play</span><span class="s2">()</span>
+            <span class="s1">xylophones</span><span class="s2">.</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">xylo</span><span class="s2">)</span>
+            <span class="s1">spawn_xylophone</span><span class="s2">()</span>
+        <span class="s0">elif </span><span class="s1">xylo</span><span class="s2">[</span><span class="s4">&quot;timer&quot;</span><span class="s2">] &lt;= </span><span class="s3">0</span><span class="s2">:</span>
+            <span class="s1">xylophones</span><span class="s2">.</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">xylo</span><span class="s2">)</span>
+            <span class="s1">spawn_xylophone</span><span class="s2">()</span>
+
+    <span class="s0">if </span><span class="s1">invincible </span><span class="s2">&gt; </span><span class="s3">0</span><span class="s2">:</span>
+        <span class="s1">invincible </span><span class="s2">-= </span><span class="s3">1</span>
+
+    <span class="s5"># ---------- DIFFICOLTÀ GRADUALE ----------</span>
+    <span class="s1">car_speed </span><span class="s2">= </span><span class="s3">3 </span><span class="s2">+ </span><span class="s1">score </span><span class="s2">* </span><span class="s3">0.05</span>
+    <span class="s0">if </span><span class="s1">score </span><span class="s2">% </span><span class="s3">3 </span><span class="s2">== </span><span class="s3">0 </span><span class="s0">and </span><span class="s1">len</span><span class="s2">(</span><span class="s1">cars</span><span class="s2">) &lt; </span><span class="s1">min</span><span class="s2">(</span><span class="s3">5</span><span class="s2">, </span><span class="s1">score </span><span class="s2">// </span><span class="s3">3 </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">):</span>
+        <span class="s0">while </span><span class="s1">len</span><span class="s2">(</span><span class="s1">cars</span><span class="s2">) &lt; </span><span class="s1">min</span><span class="s2">(</span><span class="s3">5</span><span class="s2">, </span><span class="s1">score </span><span class="s2">// </span><span class="s3">3 </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">):</span>
+            <span class="s1">cars</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">spawn_car</span><span class="s2">())</span>
+
+    <span class="s5"># ---------- GAME OVER CHECK ----------</span>
+    <span class="s0">if </span><span class="s1">lives </span><span class="s2">&lt;= </span><span class="s3">0</span><span class="s2">:</span>
+        <span class="s0">if </span><span class="s1">score </span><span class="s2">&gt; </span><span class="s1">record</span><span class="s2">:</span>
+            <span class="s1">record </span><span class="s2">= </span><span class="s1">score  </span><span class="s5"># aggiorna record sessione</span>
+        <span class="s1">game_over </span><span class="s2">= </span><span class="s0">True</span>
+        <span class="s1">s_gameover</span><span class="s2">.</span><span class="s1">play</span><span class="s2">()</span>
+
+    <span class="s5"># ---------- ROAD ----------</span>
+    <span class="s1">pygame</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">(</span><span class="s1">screen</span><span class="s2">, </span><span class="s1">ROAD_COLOR</span><span class="s2">, (</span><span class="s3">0</span><span class="s2">, </span><span class="s3">420</span><span class="s2">, </span><span class="s1">WIDTH</span><span class="s2">, </span><span class="s3">80</span><span class="s2">))</span>
+
+    <span class="s5"># ---------- PLAYER DRAW ----------</span>
+    <span class="s0">if </span><span class="s1">invincible </span><span class="s2">% </span><span class="s3">10 </span><span class="s2">&lt; </span><span class="s3">5</span><span class="s2">:</span>
+        <span class="s1">pygame</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">(</span><span class="s1">screen</span><span class="s2">, </span><span class="s1">BROWN</span><span class="s2">, </span><span class="s1">player</span><span class="s2">)</span>
+        <span class="s1">pygame</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">(</span><span class="s1">screen</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">, </span><span class="s1">player</span><span class="s2">, </span><span class="s3">2</span><span class="s2">)</span>
+        <span class="s1">pygame</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">.</span><span class="s1">circle</span><span class="s2">(</span><span class="s1">screen</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">, (</span><span class="s1">player</span><span class="s2">.</span><span class="s1">x</span><span class="s2">+</span><span class="s3">12</span><span class="s2">, </span><span class="s1">player</span><span class="s2">.</span><span class="s1">y</span><span class="s2">+</span><span class="s3">15</span><span class="s2">), </span><span class="s3">3</span><span class="s2">)</span>
+        <span class="s1">pygame</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">.</span><span class="s1">circle</span><span class="s2">(</span><span class="s1">screen</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">, (</span><span class="s1">player</span><span class="s2">.</span><span class="s1">x</span><span class="s2">+</span><span class="s3">28</span><span class="s2">, </span><span class="s1">player</span><span class="s2">.</span><span class="s1">y</span><span class="s2">+</span><span class="s3">15</span><span class="s2">), </span><span class="s3">3</span><span class="s2">)</span>
+        <span class="s1">pygame</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">.</span><span class="s1">arc</span><span class="s2">(</span><span class="s1">screen</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">, (</span><span class="s1">player</span><span class="s2">.</span><span class="s1">x</span><span class="s2">+</span><span class="s3">12</span><span class="s2">, </span><span class="s1">player</span><span class="s2">.</span><span class="s1">y</span><span class="s2">+</span><span class="s3">25</span><span class="s2">, </span><span class="s3">16</span><span class="s2">, </span><span class="s3">6</span><span class="s2">), </span><span class="s1">math</span><span class="s2">.</span><span class="s1">pi</span><span class="s2">, </span><span class="s3">2</span><span class="s2">*</span><span class="s1">math</span><span class="s2">.</span><span class="s1">pi</span><span class="s2">, </span><span class="s3">2</span><span class="s2">)</span>
+
+    <span class="s5"># ---------- DRAW CARS ----------</span>
+    <span class="s0">for </span><span class="s1">car </span><span class="s0">in </span><span class="s1">cars</span><span class="s2">:</span>
+        <span class="s1">pygame</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">(</span><span class="s1">screen</span><span class="s2">, </span><span class="s1">car</span><span class="s2">[</span><span class="s4">&quot;color&quot;</span><span class="s2">], </span><span class="s1">car</span><span class="s2">[</span><span class="s4">&quot;rect&quot;</span><span class="s2">])</span>
+        <span class="s1">pygame</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">(</span><span class="s1">screen</span><span class="s2">, </span><span class="s1">GRAY</span><span class="s2">, (</span><span class="s1">car</span><span class="s2">[</span><span class="s4">&quot;rect&quot;</span><span class="s2">].</span><span class="s1">x</span><span class="s2">+</span><span class="s3">5</span><span class="s2">, </span><span class="s1">car</span><span class="s2">[</span><span class="s4">&quot;rect&quot;</span><span class="s2">].</span><span class="s1">y</span><span class="s2">+</span><span class="s3">5</span><span class="s2">, </span><span class="s3">50</span><span class="s2">, </span><span class="s3">20</span><span class="s2">))</span>
+        <span class="s1">pygame</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">.</span><span class="s1">circle</span><span class="s2">(</span><span class="s1">screen</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">, (</span><span class="s1">car</span><span class="s2">[</span><span class="s4">&quot;rect&quot;</span><span class="s2">].</span><span class="s1">x</span><span class="s2">+</span><span class="s3">15</span><span class="s2">, </span><span class="s1">car</span><span class="s2">[</span><span class="s4">&quot;rect&quot;</span><span class="s2">].</span><span class="s1">y</span><span class="s2">+</span><span class="s3">30</span><span class="s2">), </span><span class="s3">5</span><span class="s2">)</span>
+        <span class="s1">pygame</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">.</span><span class="s1">circle</span><span class="s2">(</span><span class="s1">screen</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">, (</span><span class="s1">car</span><span class="s2">[</span><span class="s4">&quot;rect&quot;</span><span class="s2">].</span><span class="s1">x</span><span class="s2">+</span><span class="s3">45</span><span class="s2">, </span><span class="s1">car</span><span class="s2">[</span><span class="s4">&quot;rect&quot;</span><span class="s2">].</span><span class="s1">y</span><span class="s2">+</span><span class="s3">30</span><span class="s2">), </span><span class="s3">5</span><span class="s2">)</span>
+
+    <span class="s5"># ---------- UI ----------</span>
+    <span class="s1">screen</span><span class="s2">.</span><span class="s1">blit</span><span class="s2">(</span><span class="s1">font</span><span class="s2">.</span><span class="s1">render</span><span class="s2">(</span><span class="s4">f&quot;Score: </span><span class="s0">{</span><span class="s1">score</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">, </span><span class="s0">True</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">), (</span><span class="s3">10</span><span class="s2">, </span><span class="s3">10</span><span class="s2">))</span>
+    <span class="s1">screen</span><span class="s2">.</span><span class="s1">blit</span><span class="s2">(</span><span class="s1">font</span><span class="s2">.</span><span class="s1">render</span><span class="s2">(</span><span class="s4">f&quot;Vite: </span><span class="s0">{</span><span class="s1">lives</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">, </span><span class="s0">True</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">), (</span><span class="s3">10</span><span class="s2">, </span><span class="s3">40</span><span class="s2">))</span>
+    <span class="s1">screen</span><span class="s2">.</span><span class="s1">blit</span><span class="s2">(</span><span class="s1">font</span><span class="s2">.</span><span class="s1">render</span><span class="s2">(</span><span class="s4">f&quot;Record: </span><span class="s0">{</span><span class="s1">record</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">, </span><span class="s0">True</span><span class="s2">, </span><span class="s1">BLACK</span><span class="s2">), (</span><span class="s1">WIDTH</span><span class="s2">-</span><span class="s3">150</span><span class="s2">, </span><span class="s3">10</span><span class="s2">))</span>
+
+    <span class="s0">for </span><span class="s1">i </span><span class="s0">in </span><span class="s1">range</span><span class="s2">(</span><span class="s1">lives</span><span class="s2">):</span>
+        <span class="s1">pygame</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">.</span><span class="s1">circle</span><span class="s2">(</span><span class="s1">screen</span><span class="s2">, </span><span class="s1">RED</span><span class="s2">, (</span><span class="s3">20 </span><span class="s2">+ </span><span class="s1">i</span><span class="s2">*</span><span class="s3">25</span><span class="s2">, </span><span class="s3">70</span><span class="s2">), </span><span class="s3">8</span><span class="s2">)</span>
+
+    <span class="s5"># ---------- MUSIC ----------</span>
+    <span class="s1">music_timer </span><span class="s2">+= </span><span class="s3">1</span>
+    <span class="s0">if </span><span class="s1">music_timer </span><span class="s2">&gt;= </span><span class="s1">MUSIC_INTERVAL</span><span class="s2">:</span>
+        <span class="s1">music_timer </span><span class="s2">= </span><span class="s3">0</span>
+        <span class="s1">music_channel</span><span class="s2">.</span><span class="s1">play</span><span class="s2">(</span><span class="s1">music_notes</span><span class="s2">[</span><span class="s1">music_index</span><span class="s2">])</span>
+        <span class="s1">music_index </span><span class="s2">= (</span><span class="s1">music_index </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">) % </span><span class="s1">len</span><span class="s2">(</span><span class="s1">music_notes</span><span class="s2">)</span>
+
+    <span class="s1">pygame</span><span class="s2">.</span><span class="s1">display</span><span class="s2">.</span><span class="s1">update</span><span class="s2">()</span>
+    <span class="s1">clock</span><span class="s2">.</span><span class="s1">tick</span><span class="s2">(</span><span class="s3">60</span><span class="s2">)</span>
+</pre>
+</body>
+</html>
