@@ -1,17 +1,34 @@
-# Toast to the Rescue! 🥪🎵
+# Toast to the Rescue 🥪🚗
 
-A 2D arcade platformer made with Python and Pygame.
+Un gioco arcade 2D realizzato in **Python + Pygame**.
 
-## Gameplay
-You play as a brave toaster saving xylophones from falling cars.
-The game features:
-- Progressive difficulty
-- Lives system
-- Sound effects
-- Day/night atmosphere
-- Restart and menu system
+Aiuta Toast a sopravvivere sulla strada evitando le macchine
+e raccogliendo xilofoni per fare più punti possibile!
 
-## How to run
-```bash
-pip install pygame
-python main.py
+---
+
+## 🎮 Comandi
+
+- ⬅️ ➡️ Frecce direzionali → Muoviti
+- ⬆️ SPAZIO → Salta
+- ESC → Menu / Indietro
+
+---
+
+## 🕹️ Regole del gioco
+
+- Evita le macchine: se ti colpiscono perdi una vita
+- Puoi **saltare sopra le macchine** per schivarle
+- Raccogli gli **xilofoni gialli** per aumentare il punteggio
+- Ogni 3 punti la difficoltà aumenta gradualmente
+- Hai 3 vite
+- Il record viene salvato per tutta la sessione
+
+---
+
+## 🚀 Come avviare il gioco
+
+1. Installa Python (>= 3.9)
+2. Installa Pygame:
+   ```bash
+   pip install pygame
